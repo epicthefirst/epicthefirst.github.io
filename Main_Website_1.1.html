@@ -1,0 +1,1439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio</title>
+  <!-- <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;1,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    /* ===== CSS VARIABLES ===== */
+    :root {
+      --bg:         #080610;
+      --bg-2:       #0f0b1c;
+      --bg-3:       #160f28;
+      --border:     #251840;
+      --border-hi:  #3a2560;
+      --accent:     #4ade80;        /* green */
+      --accent-dim: #16a34a;
+      --purple:     #a78bfa;        /* purple */
+      --purple-dim: #6d28d9;
+      --text:       #e8dff8;
+      --muted:      #6b5a8a;
+      --font-head:  'Syne', sans-serif;
+      --font-body:  'Barlow', sans-serif;
+      --font-mono:  'JetBrains Mono', monospace;
+    }
+
+    footer {
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    body.ready footer {
+      opacity: 1;
+    }
+    
+
+    /* ===== RESET ===== */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+    body.no-scroll { overflow: hidden; }
+    img { display: block; max-width: 100%; height: auto; }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ===== LANGUAGE SCREEN ===== */
+    #lang-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 60px;
+      /* Static soft gradient orbs — no moving elements */
+      background-color: #080610;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 20% 60%, rgba(107,40,217,0.20) 0%, transparent 70%),
+        radial-gradient(ellipse 50% 40% at 80% 35%, rgba(74,222,128,0.11) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 60% at 55% 85%, rgba(167,139,250,0.13) 0%, transparent 70%);
+    }
+    .lang-screen__inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 50px;
+    }
+    .lang-screen__eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      /* padding-right compensates for trailing letter-spacing so text is truly centred */
+      letter-spacing: 0.25em;
+      /* padding-right: 0.25em; */
+
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+
+      color: var(--accent);
+      text-transform: uppercase;
+      text-align: center;
+    }
+
+    .lang-title {
+      font-family: var(--font-mono);
+      color: var(--accent);
+      text-transform: uppercase;
+      
+      font-size: 0.75rem;
+      letter-spacing: 0.25em;
+
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      align-items: center;
+      text-align: center;
+    }
+
+    .lang-title .left {
+      justify-self: end;
+      padding-right: 0.5em;
+    }
+
+    .lang-title .right {
+      justify-self: start;
+      padding-left: 0.5em;
+    }
+
+    .lang-title .dot {
+      text-align: center;
+    }
+
+
+
+
+
+
+    .lang-screen__cards {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .lang-card {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+      width: 200px;
+      padding: 36px 28px;
+      background: rgba(12,18,32,0.85);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      cursor: pointer;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      backdrop-filter: blur(8px);
+    }
+    .lang-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 0 32px rgba(74, 222, 128, 0.14), 0 0 60px rgba(107,40,217,0.10);
+    }
+    .lang-card__greeting {
+      font-family: var(--font-head);
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .lang-card__sub {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+    .lang-card__btn {
+      margin-top: 4px;
+      padding: 10px 28px;
+      background: transparent;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.8rem;
+      letter-spacing: 0.12em;
+      cursor: pointer;
+      transition: background 0.25s, color 0.25s;
+    }
+    .lang-card:hover .lang-card__btn {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* ===== NAVIGATION ===== */
+    #nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 40px;
+      height: 64px;
+      background: rgba(7, 11, 18, 0.75);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      transition: background 0.3s;
+    }
+    .nav__logo a {
+      display: flex;
+      align-items: center;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+    .nav__logo a:hover { color: var(--accent); text-decoration: none; }
+    .nav__logo svg { width: 26px; height: 26px; fill: currentColor; }
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+      list-style: none;
+    }
+    .nav__links a {
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      color: var(--muted);
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    .nav__links a:hover { color: var(--accent); text-decoration: none; }
+    .nav__right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .lang-toggle {
+      display: flex;
+      gap: 2px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      overflow: hidden;
+    }
+    .lang-toggle button {
+      padding: 5px 12px;
+      background: transparent;
+      border: none;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .lang-toggle button.active {
+      background: var(--accent);
+      color: var(--bg);
+    }
+
+    /* ===== HIDDEN UNTIL LANG CHOSEN ===== */
+    #main-content { display: none; }
+
+    /* ===== HERO ===== */
+    #hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 600px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .hero__video-wrap {
+      position: absolute;
+      inset: 0;
+    }
+    /*
+     * PLACEHOLDER: Replace "Docs/game-background.mp4" with your game footage.
+     * The video plays muted and looped as a background. Keep it under ~20MB.
+     */
+    .hero__video-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 1;
+    }
+    .hero__overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(8,6,16,0.4) 0%,
+        rgba(8,6,16,0.2) 40%,
+        rgba(8,6,16,0.7) 80%,
+        rgba(8,6,16,1)   100%
+      );
+    }
+    /* Subtle grid lines over video */
+    .hero__grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(74,222,128,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(167,139,250,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      pointer-events: none;
+    }
+    /* Fallback gradient when no video is loaded */
+    .hero__fallback {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(40,15,80,0.8) 0%, var(--bg) 75%);
+    }
+    .hero__content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      max-width: 720px;
+      padding: 0 24px;
+    }
+    .hero__eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.3s forwards;
+    }
+    .hero__title {
+      font-family: var(--font-head);
+      font-size: clamp(3rem, 7vw, 5.5rem);
+      font-weight: 800;
+      color: var(--text);
+      line-height: 1.05;
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.5s forwards;
+    }
+    .hero__title span { color: var(--accent); }
+    .hero__sub {
+      font-size: 1.1rem;
+      color: var(--muted);
+      max-width: 460px;
+      margin: 0 auto 40px;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.7s forwards;
+    }
+    .hero__cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 36px;
+      background: var(--accent);
+      color: var(--bg);
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      border-radius: 6px;
+      font-weight: 500;
+      transition: background 0.25s, transform 0.2s;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.9s forwards;
+    }
+    .hero__cta:hover { background: #5fffd8; transform: translateY(-2px); text-decoration: none; }
+    .hero__scroll-hint {
+      position: absolute;
+      bottom: 32px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      opacity: 0;
+      animation: fadeUp 0.8s 1.2s forwards;
+    }
+    .hero__scroll-hint::after {
+      content: '';
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, var(--muted), transparent);
+      animation: scrollPulse 2s 1.5s infinite;
+    }
+    @keyframes scrollPulse {
+      0%,100% { opacity: 0.4; transform: scaleY(1); }
+      50% { opacity: 1; transform: scaleY(1.15); }
+    }
+
+    /* ===== ABOUT / INTRO ===== */
+    #about {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 40px 80px;
+      text-align: center;
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .about__title {
+      font-family: var(--font-head);
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 24px;
+    }
+    .about__body {
+      font-size: 1.05rem;
+      color: #8aa3be;
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+    .skills-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+    }
+    .skill-tag {
+      padding: 6px 16px;
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 100px;
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .skill-tag:hover { border-color: var(--accent-dim); color: var(--accent); }
+
+    /* ===== FEATURED PROJECT (SPACE GAME) ===== */
+    #featured {
+      padding: 60px 40px 100px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .featured-header {
+      display: flex;
+      align-items: baseline;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .featured-badge {
+      padding: 4px 12px;
+      background: rgba(62,245,196,0.1);
+      border: 1px solid var(--accent-dim);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .featured-title {
+      font-family: var(--font-head);
+      font-size: clamp(2rem, 4vw, 3.2rem);
+      font-weight: 800;
+      color: var(--text);
+    }
+    .featured-layout {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+    @media (max-width: 860px) {
+      .featured-layout { grid-template-columns: 1fr; }
+    }
+    .featured-media {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .featured-media__main {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--bg-2);
+      aspect-ratio: 16/9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: border-color 0.25s;
+    }
+    .featured-media__main:hover { border-color: var(--accent); }
+    .featured-media__main img,
+    .featured-media__main video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.4s;
+    }
+    .featured-media__main img { cursor: zoom-in; }
+    .featured-media__main:hover img { transform: scale(1.03); }
+    .featured-media__thumbs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .featured-media__thumb {
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      overflow: hidden;
+      background: var(--bg-2);
+      aspect-ratio: 16/9;
+      cursor: pointer;
+      transition: border-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .featured-media__thumb:hover { border-color: var(--accent); }
+    .featured-media__thumb img { width: 100%; height: 100%; object-fit: contain; cursor: zoom-in; transition: transform 0.4s; }
+    .featured-media__thumb:hover img { transform: scale(1.06); }
+    .featured-info { display: flex; flex-direction: column; gap: 24px; }
+    .featured-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tag {
+      padding: 4px 12px;
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+    .tag--accent {
+      border-color: var(--accent-dim);
+      color: var(--accent);
+      background: rgba(62,245,196,0.06);
+    }
+    .featured-desc {
+      font-size: 1rem;
+      color: #8aa3be;
+      line-height: 1.75;
+    }
+    .featured-desc p + p { margin-top: 14px; }
+    .featured-status {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+    .status-dot {
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%,100% { opacity: 1; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ===== PROJECTS SECTION ===== */
+    #projects {
+      padding: 60px 40px 120px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .section-heading {
+      font-family: var(--font-head);
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 48px;
+    }
+    .section-divider {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 48px;
+    }
+    .section-divider .section-label { margin-bottom: 0; }
+    .section-divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ===== PROJECT CARD (Modular — copy to add projects) ===== */
+    .projects-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      max-width: 700px;
+      margin: 0 auto;
+      gap: 28px;
+    }
+    .project-card {
+      background: var(--bg-2);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s, box-shadow 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .project-card:hover {
+      border-color: var(--border-hi);
+      transform: translateY(-4px);
+      box-shadow: 0 16px 48px rgba(0,0,0,0.4);
+    }
+    .project-card__media {
+      position: relative;
+      width: 100%;
+      min-height: 160px;
+      background: var(--bg-3);
+      overflow: hidden;
+    }
+    .project-card__media img,
+    .project-card__media video {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 85vh;
+      object-fit: contain;
+      transition: transform 0.4s;
+      cursor: zoom-in;
+    }
+    .project-card__media video { cursor: default; }
+    .project-card__media:hover img {
+      transform: scale(1.03);
+    }
+    /* Placeholder shown when no media is set */
+    .project-card__media .media-placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: var(--border-hi);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.1em;
+    }
+    .media-placeholder__icon {
+      width: 40px; height: 40px;
+      border: 1px solid var(--border-hi);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+    .project-card__body {
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      flex: 1;
+    }
+    .project-card__tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .project-card__title {
+      font-family: var(--font-head);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+    .project-card__caption {
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+    .project-card__desc {
+      font-size: 0.93rem;
+      color: #7a95b0;
+      line-height: 1.7;
+    }
+    /* Secondary images inside a card */
+    .project-card__gallery {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: start;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .project-card__gallery img {
+      display: block;
+      width: 100%;
+      height: auto;
+      max-height: 85vh;
+      object-fit: contain;
+      background: var(--bg-3);
+      border-radius: 6px;
+      border: 1px solid var(--border);
+      cursor: zoom-in;
+      position: relative;
+      transition: transform 0.3s;
+    }
+    .project-card__gallery img:hover {
+      transform: scale(1.06);
+      z-index: 2;
+    }
+    /* Wide variant: spans full grid width */
+    .project-card--wide {
+      grid-column: 1 / -1;
+    }
+    .project-card--wide .project-card__media {
+      aspect-ratio: 21/9;
+    }
+
+    /* ===== LIGHTBOX (click any image to view full screen) ===== */
+    #lightbox {
+      position: fixed;
+      inset: 0;
+      z-index: 3000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 48px;
+      background: rgba(4,3,10,0.92);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      cursor: zoom-out;
+    }
+    #lightbox.active { display: flex; }
+    #lightbox img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+      border-radius: 8px;
+      box-shadow: 0 20px 80px rgba(0,0,0,0.6);
+      cursor: default;
+    }
+    #lightbox__close {
+      position: absolute;
+      top: 24px;
+      right: 32px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 1.4rem;
+      line-height: 1;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    #lightbox__close:hover {
+      background: rgba(255,255,255,0.12);
+      border-color: var(--accent);
+    }
+
+    /* ===== FOOTER ===== */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 40px 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 36px;
+      flex-wrap: wrap;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .footer__link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+    .footer__link:hover { color: var(--accent); text-decoration: none; }
+    .footer__link svg { width: 18px; height: 18px; fill: currentColor; flex-shrink: 0; }
+    .footer__divider {
+      width: 1px;
+      height: 20px;
+      background: var(--border);
+    }
+
+    /* ===== SCROLL REVEAL ===== */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .reveal.revealed {
+      opacity: 1;
+      transform: none;
+    }
+    .reveal-delay-1 { transition-delay: 0.1s; }
+    .reveal-delay-2 { transition-delay: 0.2s; }
+    .reveal-delay-3 { transition-delay: 0.3s; }
+    .reveal-delay-4 { transition-delay: 0.4s; }
+
+    /* ===== UTILITIES ===== */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+      from { opacity: 0; transform: translateY(20px); }
+    }
+
+    /* ===== RESPONSIVE ===== */
+    @media (max-width: 640px) {
+      #nav { padding: 0 20px; }
+      .nav__links { display: none; }
+      #about { padding: 80px 24px 60px; }
+      #featured, #projects { padding-left: 24px; padding-right: 24px; }
+      .featured-header { flex-direction: column; gap: 8px; }
+      footer { padding: 40px 24px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body class="no-scroll">
+
+<!-- ================================================================
+     LANGUAGE SCREEN
+     Closes when a language is selected.
+     ================================================================ -->
+<div id="lang-screen">
+  <div class="lang-screen__inner">
+    <!-- <div class="lang-screen__eyebrow">Select your language · Choisissez votre langue</div> -->
+    <div class="lang-title">
+      <span class="left">Select your language</span>
+      <span class="dot">·</span>
+      <span class="right">Choisissez votre langue</span>
+    </div>
+    <div class="lang-screen__cards">
+
+      <div class="lang-card" onclick="setLanguage('en')">
+        <div class="lang-card__greeting">Welcome</div>
+        <div class="lang-card__sub">English</div>
+        <button class="lang-card__btn">Continue →</button>
+      </div>
+
+      <div class="lang-card" onclick="setLanguage('fr')">
+        <div class="lang-card__greeting">Bienvenue</div>
+        <div class="lang-card__sub">Français</div>
+        <button class="lang-card__btn">Continuer →</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- ================================================================
+     MAIN CONTENT
+     Hidden until language is selected.
+     ================================================================ -->
+<div id="main-content">
+
+  <!-- ── NAVIGATION ────────────────────────────────────── -->
+  <nav id="nav">
+    <div class="nav__logo">
+      <a href="https://github.com/epicthefirst" target="_blank" rel="noopener" aria-label="GitHub Profile">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+        </svg>
+      </a>
+    </div>
+    <ul class="nav__links">
+      <li><a href="#hero" data-lang="en">Home</a><a href="#hero" data-lang="fr">Accueil</a></li>
+      <li><a href="#about" data-lang="en">About</a><a href="#about" data-lang="fr">À propos</a></li>
+      <li><a href="#featured" data-lang="en">Featured</a><a href="#featured" data-lang="fr">En vedette</a></li>
+      <li><a href="#projects" data-lang="en">Projects</a><a href="#projects" data-lang="fr">Projets</a></li>
+    </ul>
+    <div class="nav__right">
+      <div class="lang-toggle">
+        <button id="btn-en" onclick="switchLanguage('en')">EN</button>
+        <button id="btn-fr" onclick="switchLanguage('fr')">FR</button>
+      </div>
+    </div>
+  </nav>
+
+
+  <!-- ── HERO ──────────────────────────────────────────── -->
+  <section id="hero">
+    <div class="hero__video-wrap">
+      <!-- ============================================================
+           PLACEHOLDER: Replace "Docs/game-background.mp4" with your
+           game footage MP4 once it's ready. The video plays muted
+           and loops automatically as the background.
+           ============================================================ -->
+      <video autoplay muted loop playsinline>
+        <source src="Docs\Main\Background Cut.mp4" type="video/mp4">
+      </video>
+    </div>
+    <!-- Fallback gradient (visible when no video loads) -->
+    <div class="hero__fallback"></div>
+    <div class="hero__overlay"></div>
+    <div class="hero__grid"></div>
+
+    <div class="hero__content">
+      <div class="hero__eyebrow">
+        <span data-lang="en">Developer · Designer · Creator</span>
+        <span data-lang="fr">Développeur · Concepteur · Créateur</span>
+      </div>
+      <h1 class="hero__title">
+        <span data-lang="en">My <span>Portfolio</span></span>
+        <span data-lang="fr">Mon <span>Portfolio</span></span>
+      </h1>
+      <p class="hero__sub">
+        <span data-lang="en">C# · Python · JavaScript · 3D Modelling · 2D Design · Video Editing</span>
+        <span data-lang="fr">C# · Python · JavaScript · Modélisation 3D · Conception 2D · Montage vidéo</span>
+      </p>
+      <a href="#about" class="hero__cta">
+        <span data-lang="en">Explore Projects</span>
+        <span data-lang="fr">Explorer les projets</span>
+      </a>
+    </div>
+
+    <div class="hero__scroll-hint">
+      <span data-lang="en">Scroll</span>
+      <span data-lang="fr">Défiler</span>
+    </div>
+  </section>
+
+
+  <!-- ── ABOUT ─────────────────────────────────────────── -->
+  <section id="about">
+    <div class="reveal">
+      <div class="section-label">
+        <span data-lang="en">About</span>
+        <span data-lang="fr">À propos</span>
+      </div>
+      <h2 class="about__title">
+        <span data-lang="en">Building things I'm proud of.</span>
+        <span data-lang="fr">Créer des choses dont je suis fier.</span>
+      </h2>
+      <p class="about__body">
+        <span data-lang="en">
+          This is my portfolio covering things I've built and designed across software, 3D modelling, and media.
+          I've coded in C#, Python, and JavaScript, and worked with tools like Unity, Blender, Inventor, Photoshop, and Illustrator.
+        </span>
+        <span data-lang="fr">
+          Voici mon portfolio, qui présente les projets que j’ai réalisés et conçus dans les domaines du logiciel, de la modélisation 3D et des médias.
+          J’ai programmé en C#, Python et JavaScript, et j’ai utilisé des outils tels que Unity, Blender, Inventor, Photoshop et Illustrator.
+        </span>
+      </p>
+      <div class="skills-row">
+        <span class="skill-tag">C#</span>
+        <span class="skill-tag">Unity</span>
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">Blender</span>
+        <span class="skill-tag">Autodesk Inventor</span>
+        <span class="skill-tag">Photoshop</span>
+        <span class="skill-tag">Illustrator</span>
+        <span class="skill-tag">Premiere Pro</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── FEATURED PROJECT: Archaeon ───────────────── -->
+  <section id="featured">
+    <div class="section-divider reveal">
+      <div class="section-label">
+        <span data-lang="en">Featured Project</span>
+        <span data-lang="fr">Projet phare</span>
+      </div>
+    </div>
+
+    <div class="featured-layout reveal">
+      <div class="featured-media">
+        <!-- ============================================================
+             PLACEHOLDER: Main featured image — game screenshot.
+             You can also swap this <img> for a <video> element
+             to show a gameplay clip here too.
+             ============================================================ -->
+        <div class="featured-media__main">
+          <img src="Docs/Archaeon/In Game Screenshot.png" alt="Archaeon running in Unity" onclick="openLightbox(this.src, this.alt)">
+        </div>
+        <div class="featured-media__thumbs">
+          <!-- PLACEHOLDER: secondary game screenshots — update src as needed -->
+          <div class="featured-media__thumb">
+            <img src="Docs/Archaeon/Simulation Screenshot.png" alt="Unity editor view" onclick="openLightbox(this.src, this.alt)">
+          </div>
+          <div class="featured-media__thumb">
+            <img src="Docs/Archaeon/Unity code.png" alt="C# source code" onclick="openLightbox(this.src, this.alt)">
+          </div>
+        </div>
+      </div>
+
+      <div class="featured-info">
+        <div class="featured-header" style="margin-bottom:0; flex-wrap:wrap;">
+          <span class="featured-badge">
+            <span data-lang="en">Active Development</span>
+            <span data-lang="fr">Développement actif</span>
+          </span>
+        </div>
+        <h2 class="featured-title">
+          <span data-lang="en">Archaeon</span>
+          <span data-lang="fr">Archaeon</span>
+        </h2>
+        <div class="featured-tags">
+          <span class="tag tag--accent">C#</span>
+          <span class="tag tag--accent">Unity</span>
+          <span class="tag">Simulator</span>
+          <span class="tag">4X Strategy</span>
+          <span class="tag">Bot Algorithms</span>
+          <span class="tag">Pathfinding</span>
+          
+          
+        </div>
+        <div class="featured-desc">
+          <p data-lang="en">
+            A 4X strategy game built in Unity using C#, focused on expanding to other star systems, growing your empire,
+            and fighting other players and bots.
+          </p>
+          <p data-lang="en">
+            Stars are generated in a pseudo-random layout, based on a seed, and optimised to avoid overlap,
+            with the enemies being generated on their own stars. 
+            Planets dictate infrastructure costs on their star, which grant bonuses like income, troops, and research when invested in.
+            Carriers transport ships between the stars, acting as the backbone for expansion, combat, and logistics.
+            The player controls the passage of time, which is divided into "ticks" and "cycles", allowing for well-planned strategies to emerge.
+          </p>
+          <p data-lang="en">
+            On top of being a 4X strategy game, there is a simulation game mode where the player is instead replaced with a bot, 
+            allowing for an emulation of emergent behaviour by letting two or more opposing entities to interact without outside influence.
+            The "player" can instead view how empires can grow, fight, and fall, by watching the simulation play out.
+          </p>
+          <p data-lang="fr">
+            Un jeu de stratégie 4X développé sous Unity en C#, axé sur l’expansion vers d’autres systèmes stellaires, le développement de votre empire,
+            et les combats contre d’autres joueurs et des bots.
+          </p>
+          <p data-lang="fr">
+            Les étoiles sont générées selon une disposition pseudo-aléatoire, basée sur une graine, et optimisée pour éviter les chevauchements,
+            les ennemis étant générés sur leurs propres étoiles.
+            Les planètes déterminent les coûts d’infrastructure sur leur étoile; lorsqu’on y investit, elles accordent des bonus tels que des revenus, des troupes et de la recherche.
+            Les porte-vaisseaux transportent les vaisseaux d’une étoile à l’autre, constituant ainsi l’épine dorsale de l’expansion, du combat et de la logistique.
+            Le joueur contrôle le passage du temps, qui est divisé en « ticks » et en « cycles », ce qui permet l’élaboration de stratégies bien planifiées.
+          </p>
+          <p data-lang="fr">
+            En plus d’être un jeu de stratégie 4X, il existe un mode de jeu de simulation où le joueur est remplacé par un bot,
+            permettant ainsi d’émuler des comportements émergents en laissant deux ou plusieurs entités adverses interagir sans influence extérieure.
+            Le « joueur » peut alors observer comment les empires se développent, combattent et s’effondrent, en suivant le déroulement de la simulation.
+          </p>
+        </div>
+        <div class="featured-status">
+          <div class="status-dot"></div>
+          <span data-lang="en">Work in Progress</span>
+          <span data-lang="fr">En cours de développement</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ── OTHER PROJECTS ─────────────────────────────────── -->
+  <section id="projects">
+    <div class="section-divider reveal">
+      <div class="section-label">
+        <span data-lang="en">Other Projects</span>
+        <span data-lang="fr">Autres projets</span>
+      </div>
+    </div>
+
+    <div class="projects-grid">
+
+      <!-- ================================================================
+           PROJECT CARD TEMPLATE
+           ──────────────────────────────────────────────────────────────
+           To add a new project, copy everything between the dashes below
+           and paste it as a new <article class="project-card"> block
+           inside .projects-grid. Then update:
+             • .project-card__media  →  replace src with your image/video
+             • .tag elements         →  update tool/language names
+             • .project-card__title  →  project name (EN + FR)
+             • .project-card__caption→  short subtitle (optional)
+             • .project-card__desc   →  description paragraph(s)
+             • .project-card__gallery→  add extra images (optional, delete if unused)
+           Use class="project-card--wide" on <article> to span full width.
+           ================================================================
+
+      <article class="project-card reveal">
+        <div class="project-card__media">
+          <img src="PLACEHOLDER.png" alt="[Project name]" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+          
+          OR for a video:
+          <video autoplay muted loop playsinline>
+            <source src="PLACEHOLDER.mp4" type="video/mp4">
+          </video>
+          
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Tool / Language</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Project Title</span>
+            <span data-lang="fr">Titre du projet</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Short caption</p>
+          <p class="project-card__caption" data-lang="fr">Courte légende</p>
+          <p class="project-card__desc" data-lang="en">Description in English.</p>
+          <p class="project-card__desc" data-lang="fr">Description en français.</p>
+          <div class="project-card__gallery">
+            <img src="PLACEHOLDER2.png" alt="description" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+            <img src="PLACEHOLDER3.png" alt="description" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+          </div>
+        </div>
+      </article>
+
+           ================================================================
+           END TEMPLATE — real projects follow below
+           ================================================================ -->
+
+
+      <!-- ── Robot Gripper ───────────────────────────── -->
+      <article class="project-card reveal reveal-delay-1">
+        <div class="project-card__media">
+          <video controls preload="metadata" style="background:var(--bg-3);">
+            <source src="Docs/Robot Gripper/Cropped Robot Gripper.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Autodesk Inventor</span>
+            <span class="tag">3D Modelling</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Robot Gripper</span>
+            <span data-lang="fr">Grippeur de robot</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Functional constrained assembly</p>
+          <p class="project-card__caption" data-lang="fr">Assemblage contraint fonctionnel</p>
+          <p class="project-card__desc" data-lang="en">
+            A robot gripper designed in Autodesk Inventor for a school project.
+            Parts are constrained to slide and move as they would in real life, opening and closing
+            in response to the grey gear. I was responsible for assembling the final product.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Une pince robotisée conçue dans Autodesk Inventor dans le cadre d’un projet scolaire.
+            Les pièces sont contraintes de glisser et de se déplacer comme elles le feraient dans la réalité, s’ouvrant et se fermant
+            en fonction du pignon gris. J’étais chargé de l’assemblage du produit final.
+          </p>
+        </div>
+      </article>
+
+
+      <!-- ── Floating Island ─────────────────────────── -->
+      <article class="project-card reveal reveal-delay-2">
+        <div class="project-card__media">
+          <img src="Docs/Floating Island/Floating Island Render.png" alt="Low-poly floating island render" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Blender</span>
+            <span class="tag">3D Modelling</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Floating Island</span>
+            <span data-lang="fr">Île flottante</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Low-poly render, 2022</p>
+          <p class="project-card__caption" data-lang="fr">Rendu low-poly, 2022</p>
+          <p class="project-card__desc" data-lang="en">
+            A low-polygon 3D model made in Blender for a school project. I sculpted the main island,
+            built low-poly trees from a tutorial, and hand-coloured every polygon before rendering.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Un modèle 3D low-poly réalisé dans Blender pour un projet scolaire. J'ai sculpté l'île principale,
+            créé des arbres low-poly, puis colorié chaque polygone à la main avant le rendu final.
+          </p>
+        </div>
+      </article>
+
+
+      <!-- ── Marvel Intro ────────────────────────────── -->
+      <article class="project-card reveal reveal-delay-3">
+        <div class="project-card__media">
+          <video controls preload="metadata" style="background:var(--bg-3);">
+            <source src="Docs/Marvel Intro/Marvel Intro.mp4" type="video/mp4">
+          </video>
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Premiere Pro</span>
+            <span class="tag">Video Editing</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Marvel Intro Recreation</span>
+            <span data-lang="fr">Recréation de l'intro Marvel</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Motion graphics school assignment</p>
+          <p class="project-card__caption" data-lang="fr">Devoir de motion design scolaire</p>
+          <p class="project-card__desc" data-lang="en">
+            A recreation of the classic Marvel intro built in Premiere Pro using comic book images arranged
+            frame-by-frame with a red filter, a faded logo reveal, and original music.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Une recréation de l'intro Marvel classique réalisée dans Premiere Pro avec des images de BD
+            image par image, un filtre rouge, un fondu du logo et une bande sonore.
+          </p>
+        </div>
+      </article>
+
+
+      <!-- ── 2D Agenda Design ────────────────────────── -->
+      <article class="project-card reveal reveal-delay-1">
+        <div class="project-card__media">
+          <img src="Docs/Agenda Cover/Agenda Sec 2.png" alt="Winning school agenda cover design" loading="lazy"
+               style="object-position: top;" onclick="openLightbox(this.src, this.alt)">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Photoshop</span>
+            <span class="tag">Illustrator</span>
+            <span class="tag">2D Design</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Agenda Cover Design</span>
+            <span data-lang="fr">Couverture d'agenda</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">School competition winner, 2023</p>
+          <p class="project-card__caption" data-lang="fr">Gagnant du concours scolaire, 2023</p>
+          <p class="project-card__desc" data-lang="en">
+            Selected as the winner, my design was submitted in early 2023 for an annual school assignment to determine the next school agenda cover.
+            The school principle decides the winner, and she decided that my design was better than all the other submissions.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Ayant été retenu comme gagnant, mon dessin a été soumis au début de 2023 dans le cadre d’un projet scolaire annuel visant à choisir la couverture du prochain agenda de l’école.
+            C’est la directrice de l’école qui désigne le gagnant, et elle a estimé que mon dessin était meilleur que toutes les autres propositions.
+          </p>
+        </div>
+      </article>
+
+
+      <!-- ── Reciprocator ────────────────────────────── -->
+      <article class="project-card reveal reveal-delay-2">
+        <div class="project-card__media">
+          <img src="Docs/Reciprocator/Reciprocator.png" alt="Rotating reciprocator assembly" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Autodesk Inventor</span>
+            <span class="tag">3D Modelling</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Reciprocator</span>
+            <span data-lang="fr">Réciprocateur</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Constrained mechanical assembly</p>
+          <p class="project-card__caption" data-lang="fr">Assemblage mécanique contraint</p>
+          <p class="project-card__desc" data-lang="en">
+            Similar to the Robot Gripper project, this is a rotating reciprocator assembly modelled in
+            Autodesk Inventor with constrained parts that move realistically.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Similaire au projet de pince robotique, il s'agit d'un réciprocateur rotatif modélisé dans
+            Autodesk Inventor avec des pièces contraintes qui se déplacent de façon réaliste.
+          </p>
+        </div>
+      </article>
+
+
+      <!-- ── Python ──────────────────────────────────── -->
+      <article class="project-card reveal reveal-delay-3">
+        <div class="project-card__media">
+          <img src="Docs/Python/Python.png" alt="Python code" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+        </div>
+        <div class="project-card__body">
+          <div class="project-card__tags">
+            <span class="tag">Python</span>
+            <span class="tag">Algorithms</span>
+          </div>
+          <h3 class="project-card__title">
+            <span data-lang="en">Python Projects</span>
+            <span data-lang="fr">Projets Python</span>
+          </h3>
+          <p class="project-card__caption" data-lang="en">Sorting algorithm · Calculator</p>
+          <p class="project-card__caption" data-lang="fr">Algorithme de tri · Calculatrice</p>
+          <p class="project-card__desc" data-lang="en">
+            A collection of Python work including a sorting algorithm written for an exam and
+            a functional calculator application.
+          </p>
+          <p class="project-card__desc" data-lang="fr">
+            Une collection de travaux Python incluant un algorithme de tri écrit pour un examen
+            et une application calculatrice fonctionnelle.
+          </p>
+          <div class="project-card__gallery">
+            <img src="Docs/Python/Python Exam.png" alt="Python sorting algorithm exam" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+            <img src="Docs/Python/Python Calculator.png" alt="Python calculator" loading="lazy" onclick="openLightbox(this.src, this.alt)">
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /.projects-grid -->
+  </section>
+
+
+  <!-- ── FOOTER ─────────────────────────────────────────── -->
+  <footer>
+    <!-- <a class="footer__link" href="mailto:your@email.com">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/>
+      </svg>
+      your@email.com
+    </a>
+    <div class="footer__divider"></div> -->
+    <a class="footer__link" href="https://github.com/epicthefirst" target="_blank" rel="noopener">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/>
+      </svg>
+      github.com/epicthefirst
+    </a>
+  </footer>
+
+</div><!-- /#main-content -->
+
+
+<!-- ================================================================
+     LIGHTBOX
+     Click any project image to view it full screen, uncropped.
+     ================================================================ -->
+<div id="lightbox" onclick="closeLightbox()">
+  <button id="lightbox__close" onclick="closeLightbox()" aria-label="Close">✕</button>
+  <img id="lightbox__img" src="" alt="" onclick="event.stopPropagation()">
+</div>
+
+
+<!-- ================================================================
+     JAVASCRIPT
+     ================================================================ -->
+<script>
+  /* ── LANGUAGE ─────────────────────────────────────── */
+  let currentLang = 'en';
+
+  function applyLanguage (lang) {
+    currentLang = lang;
+    document.documentElement.lang = lang;
+
+    // Show/hide all data-lang elements
+    document.querySelectorAll('[data-lang]').forEach(el => {
+      el.style.display = (el.getAttribute('data-lang') === lang) ? '' : 'none';
+    });
+
+    // Update nav toggle button states
+    const btnEn = document.getElementById('btn-en');
+    const btnFr = document.getElementById('btn-fr');
+    if (btnEn) btnEn.classList.toggle('active', lang === 'en');
+    if (btnFr) btnFr.classList.toggle('active', lang === 'fr');
+  }
+
+  // Called from the language screen
+  function setLanguage (lang) {
+    applyLanguage(lang);
+
+    // Dismiss language screen, show content
+    const screen  = document.getElementById('lang-screen');
+    const content = document.getElementById('main-content');
+
+    screen.style.transition  = 'opacity 0.6s ease';
+    screen.style.opacity     = '0';
+    setTimeout(() => {
+      screen.style.display = 'none';
+      content.style.display = 'block';
+      document.body.classList.remove('no-scroll');
+
+      document.body.classList.add('ready');
+
+      window.scrollTo(0, 0);
+      // Trigger reveal for elements already in viewport
+      checkReveals();
+    }, 600);
+  }
+
+  // Called from the nav lang toggle
+  function switchLanguage (lang) {
+    applyLanguage(lang);
+  }
+
+
+  /* ── SCROLL REVEAL ────────────────────────────────── */
+  function checkReveals () {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('revealed');
+          obs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+  }
+
+
+  /* ── LIGHTBOX ─────────────────────────────────────── */
+  function openLightbox (src, alt) {
+    const lb  = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox__img');
+    img.src = src;
+    img.alt = alt || '';
+    lb.classList.add('active');
+    document.body.classList.add('no-scroll');
+  }
+
+  function closeLightbox () {
+    const lb = document.getElementById('lightbox');
+    lb.classList.remove('active');
+    document.body.classList.remove('no-scroll');
+    document.getElementById('lightbox__img').src = '';
+  }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+
+  /* ── ON LOAD ──────────────────────────────────────── */
+  window.addEventListener('load', () => {
+    // Keep language screen visible, lock scroll
+    window.scrollTo(0, 0);
+    document.body.classList.add('no-scroll');
+    // Run a first-pass language apply so data-lang elements start hidden correctly
+    applyLanguage('en');
+  });
+</script>
+
+</body>
+</html>
